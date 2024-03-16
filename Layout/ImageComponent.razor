@@ -1,0 +1,44 @@
+
+
+<div class="mt-4 ">
+
+<h3 class="text-center mt-4 p-4">Bilder från våra besök</h3>
+    <div class="row g-0">
+        @if (image != null)
+        {
+            //loopar igenom bilder
+            @foreach (var img in image)
+            {
+                <div class="col-3">
+                    <img src="@img.ImageName" alt="bild från besöjk hör frisör" class="img-fluid">
+                </div>
+            }
+        }
+    </div>
+</div>
+ 
+  @code{
+    private Image[]? image;
+
+//laddar bilderna
+        protected override async Task OnInitializedAsync()
+    {
+        await LoadImages();
+   
+    }
+//hämtar bilderna
+    private async Task LoadImages()
+    {
+        image = await Http.GetFromJsonAsync<Image[]>("http://localhost:5004/api/Image");
+    }
+//klass för bilder:
+ public class Image
+    {
+        public int Id { get; set; }
+        public string? ImageName { get; set; } //namn för bild
+
+
+
+    }
+
+  }

@@ -1,0 +1,272 @@
+﻿@page "/bokatid"
+@using System.ComponentModel.DataAnnotations
+@inject NavigationManager NavigationManager
+
+ <div class="container mt-4 p-4 mb-4 ">
+    <!--Breadcrumbs-->
+<ul class="breadcrumb" aria-label="bread-crumb">
+  <li><NavLink href="/" class="nav" Match="NavLinkMatch.All">Hem</NavLink></li>
+  <li>Boka tid hos oss</li>
+</ul>
+        <p class="citat text-center">En salong för alla</p>
+        <h1 class="mb-4">Boka tid hos oss</h1>
+    <!--Formulär för bokning-->
+        <div class="form-group">
+            <EditForm Model="@newBooking" OnValidSubmit="AddNewBooking">
+                <DataAnnotationsValidator />
+                <ValidationMessage For="@(() => newBooking.TimeId)" class="text-danger" />
+               <label for="bokningId">Lediga tider</label>
+                @if (time != null)
+                {
+                    <InputSelect  id="bokningId"  class="form-select" @bind-Value="@newBooking.TimeId">
+                     
+                        @foreach (var t in time)
+                        {
+                            if (t.Available && t.Date >= DateTime.Today)
+                            {
+                                <option value="@t.Id">@t.Date.ToString("yyyy-MM-dd") kl @t.Time</option>
+                            }
+                        }
+                    </InputSelect>
+                }
+                <div class="row">
+                    <div class="col">
+                <ValidationMessage For="@(() => newBooking.HairLength)" class="text-danger" />
+                <label for="hairLength">Hårlängd:</label>
+                <InputSelect class="form-select"  id="hairlength" @bind-Value="@newBooking.HairLength">
+                    <option value="" selected>Välj en hårlängd</option>
+                    <option value="Kort">Kort</option>
+                    <option value="Medel">Medel</option>
+                    <option value="Långt">Långt</option>
+                </InputSelect>
+                </div>
+                   <div class="col">
+                <ValidationMessage For="@(() => newBooking.HairType)" class="text-danger" />
+                <label for="hairtype">Hårtyp:</label>
+                <InputSelect class="form-select"  id="hairtype" @bind-Value="@newBooking.HairType">
+          <option value="" selected>Välj en hårtyp</option>
+                    <option value="Tunt">Tunt</option>
+                    <option value="Medel">Medel</option>
+                    <option value="Tjockt">Tjockt</option>
+                </InputSelect>
+                 </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                <ValidationMessage For="@(() => newBooking.HairdresserId)" class="text-danger" />
+                <label for="hairdresser">Frisör:</label>
+                @if (hairdresser != null)
+                {
+                    <InputSelect class="form-select"  id="hairdresser" @bind-Value="@newBooking.HairdresserId">
+                        
+                        @foreach (var h in hairdresser)
+                        {
+                            <option value="@h.Id">@h.Name</option>
+                        }
+                    </InputSelect>
+                }
+                </div>
+                <div class="col">
+                <ValidationMessage For="@(() => newBooking.CategoryId)" class="text-danger" />
+                <label for="kategori">Kategori:</label>
+           
+              
+                    <InputSelect class="form-select"  id="kategori"  @bind-Value="@newBooking.CategoryId">
+                   <option value="" disabled></option>
+                        @foreach (var c in category)
+                        
+                        {
+                            <option value="@c.Id">@c.Name, @c.Price kr</option>
+                        }
+                    </InputSelect>
+                
+                </div>
+                </div>
+                <ValidationMessage For="@(() => newBooking.Message)" class="text-danger" />
+                <label for="message">Meddelande:</label>
+                <InputText placeholder="Beskriv din bokning" id="message" class="form-control"
+                    @bind-Value="@newBooking.Message"></InputText>
+                <h3>Kund information</h3>
+                <label>
+                    Är du en ny kund?
+                    <InputCheckbox @bind-Value="@isNewCustomer"></InputCheckbox>
+                </label>
+                <!--Kontroll om kunden är ny eller befinlitg-->
+                @if (isNewCustomer)
+                {
+                    <div>
+                        <ValidationMessage For="@(() => newCustomer.Name)" class="text-danger" />
+                        <label for="customerName">Namn:</label>
+                        <InputText class="form-control" id="customerName" @bind-Value="@newCustomer.Name"></InputText>
+                        <label for="customerEmail">Email:</label>
+                        <InputText class="form-control" type="email"  id="customerEmail" @bind-Value="@newCustomer.Email"></InputText>
+                        <label for="customerPassword">Lösenord:</label>
+                        <InputText class="form-control" type="password"  id="customerPassword" @bind-Value="@newCustomer.Password"></InputText>
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        <ValidationMessage For="@(() => newBooking.CustomerId)" class="text-danger" />
+                        <label for="customerId">Kund Nr:</label>
+                        <InputNumber class="form-control " id="customerId" @bind-Value="newBooking.CustomerId"></InputNumber>
+                    </div>
+                }
+
+                <button type="submit" class="btn btn-standard">Lägg till Bokning</button>
+            </EditForm>
+        </div>
+    </div>
+
+@code
+{
+    //variabler
+    private Booking? booking;
+    private Hairdresser[]? hairdresser;
+    private Times[]? time;
+    private Category[]? category;
+    private Booking newBooking = new Booking();
+    private Customer[]? customer;
+    private Customer newCustomer = new Customer();
+    private bool bookingAdded = false;
+    private bool isNewCustomer = false;
+    [Parameter]
+    public string bookingId { get; set; }
+    //hämtar data vi laddning
+    protected override async Task OnInitializedAsync()
+    {
+   
+        await getHairdressers();
+        await getTimes();
+        await getCategories();
+    }
+    //get metod bokningar
+    private async Task LoadBooking(int bookingId)
+    {
+        booking = await Http.GetFromJsonAsync<Booking>($"http://localhost:5004/api/Booking/{bookingId}");
+    }
+
+
+    private async Task getHairdressers()
+    {
+        hairdresser = await Http.GetFromJsonAsync<Hairdresser[]>("http://localhost:5004/api/Hairdresser");
+    }
+
+    private async Task getCategories()
+    {
+        category = await Http.GetFromJsonAsync<Category[]>("http://localhost:5004/api/Category");
+    }
+
+    private async Task getTimes()
+    {
+        time = await Http.GetFromJsonAsync<Times[]>("http://localhost:5004/api/Time");
+    }
+    //Post anrop
+   private async Task AddNewBooking()
+{
+    try
+    {
+        if (isNewCustomer)
+        {
+            // Om det är en ny kund, skapa kunden först
+            var customerJson = JsonSerializer.Serialize(newCustomer);
+            var customerContent = new StringContent(customerJson, Encoding.UTF8, "application/json");
+            var customerResponse = await Http.PostAsync("http://localhost:5004/api/Customer", customerContent);
+            customerResponse.EnsureSuccessStatusCode();
+
+            var createdCustomer = await customerResponse.Content.ReadFromJsonAsync<Customer>();
+            if (createdCustomer != null)
+            {
+                newBooking.CustomerId = createdCustomer.Id;
+            }
+        }
+
+        // Skapa bokningen med alla uppgifter
+        var bookingJson = JsonSerializer.Serialize(newBooking);
+        var bookingContent = new StringContent(bookingJson, Encoding.UTF8, "application/json");
+        var authToken = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "authToken");
+        Http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
+        var bookingResponse = await Http.PostAsync("http://localhost:5004/api/Booking", bookingContent);
+
+        if (bookingResponse.IsSuccessStatusCode)
+        {
+            // Visa en bekräftelse att bokningen har lagts till
+          var createdBooking = await bookingResponse.Content.ReadFromJsonAsync<Booking>();
+    if (createdBooking != null)
+    {
+        NavigationManager.NavigateTo($"/bookingconfirm/{createdBooking.Id}");
+    }
+            
+        }
+    }
+    catch (Exception ex)
+    {
+        // Hantera eventuella undantag
+    }
+}
+
+//modell för bokninhgar och relaterade tabeller
+    public class Booking
+    {
+        public int Id { get; set; }
+        public DateTime BookingDateTime { get; set; } = DateTime.Now;
+
+        [Required(ErrorMessage = "Ange ett meddelande")]
+        public string Message { get; set; }
+        public bool Status { get; set; } = false;
+
+        [Required(ErrorMessage = "Ange din hårlängd")]
+        public string HairType { get; set; }
+        [Required(ErrorMessage = "Ange din hår typ")]
+        public string HairLength { get; set; }
+
+        [Required(ErrorMessage = "Välj en tid")]
+        public int TimeId { get; set; } // Referens till TimeModel
+        public Times Time { get; set; }
+
+        [Required(ErrorMessage = "Välj en frissör")]
+        public int HairdresserId { get; set; }
+        public Hairdresser Hairdresser { get; set; }
+
+        [Required(ErrorMessage = "Välj en kategori")]
+        public int CategoryId { get; set; }
+        public Category Category { get; set; }
+
+        [Required(ErrorMessage = "Ange kund nr eller lägg till ny")]
+        public int CustomerId { get; set; }
+        public Customer Customer { get; set; }
+    }
+
+    public class Times
+    {
+        public int Id { get; set; }
+        public TimeSpan Time { get; set; }
+        public bool Available { get; set; }
+        public DateTime Date { get; set; }
+    }
+
+    public class Hairdresser
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class Category
+    {
+        public int Id { get; set; }
+     
+        public string Name { get; set; }
+        public decimal Price { get; set; }
+    }
+
+    public class Customer
+    {
+        public int Id { get; set; }
+        [Required(ErrorMessage = "Ange kundnamn")]
+        public string Name { get; set; }
+        [Required(ErrorMessage = "Ange epost")]
+        public string Email { get; set; }
+        [Required(ErrorMessage = "Ange lösenord")]
+        public string Password { get; set; }
+    }
+}

@@ -1,0 +1,149 @@
+@page "/bookingconfirm/{bookingId}"
+@inject NavigationManager Navigation
+<div class="container p-4 mt-4 w-75 mx-auto">
+    <section>
+    <p class="citat text-center">Bokningsbekräftelse </p>
+    <h1>Salong Lilla Hörnan</h1>
+    <p class="mt-4"> <strong>Hej @booking.Customer.Name !</strong></p>
+    <p>Tack för din bokning hoss oss på Salong Lilla Hörnan!</p>
+ <div class="row">
+    <div class="col-md">
+      <table class="table">
+        <thead colspan="2"><strong> Bokningsinformation</strong></thead>
+
+        <tbody>
+          <tr>
+            <td>Meddelande:</td>
+            <td>@booking.Message</td>
+          </tr>
+          <tr>
+            <td>Datum:</td>
+            <td>@booking.Time.Date.ToString("yyyy-MM-dd")</td>
+          </tr>
+          <tr>
+            <td>Tid:</td>
+            <td>@booking.Time.Time.ToString(@"hh\:mm")</td>
+          </tr>
+        <tr>
+            <td>Hårtyp:</td>
+            <td>@booking.HairType</td>
+          </tr>
+          <tr>
+                <td>Hårlängd</td>
+        <td>@booking.HairLength</td>
+          </tr>
+       <tr>
+        <td>Frisör</td>
+        <td>@booking.Hairdresser.Name</td>
+    </tr>
+        <tr>
+            <td>Kategori</td>
+                 <td> @booking.Category.Name</td>
+        </tr>
+           <tr>
+            <td>Pris:</td>
+                 <td> @booking.Category.Price</td>
+        </tr>
+
+        </tbody>
+      </table>
+
+
+       <table class="table">
+        <thead colspan="2"><strong> Kontaktinformation:</strong></thead>
+
+        <tbody>
+          <tr>
+            <td>Namn:</td>
+            <td> @booking.Customer.Name</td>
+          </tr>
+          <tr>
+            <td>E-post:</td>
+            <td>@booking.Customer.Email</td>
+          </tr>
+       
+
+        </tbody>
+      </table>
+    </div>
+ </div>
+    <p class="mt-4">Avbokning måste ske senast 48h innan din bokade tid, vid avbokning senare än 48h innan din bokade tid debiterar vi dig 50% av behandlingspriset. Vid avbokning senare än 24h innan din bokade tid debiterar vi dig 100% av behandlispriset</p>
+    </section>
+</div>
+
+@code 
+
+{
+  public Booking booking;
+
+    [Parameter]
+    public string bookingId { get; set; }
+
+  protected override async Task OnInitializedAsync()
+    {
+        int id = Convert.ToInt32(bookingId);
+        await LoadBooking(id);
+    }
+
+
+    private async Task LoadBooking(int bookingId)
+    {
+        booking = await Http.GetFromJsonAsync<Booking>($"http://localhost:5004/api/Booking/{bookingId}");
+    }
+
+private void navigateBooking()
+{
+        NavigationManager.NavigateTo("/booking");
+}
+//modeller för bokningar och relaterade
+   public class Booking
+    {
+        public int Id { get; set; }
+        public DateTime BookingDateTime { get; set; } = DateTime.Now;
+        public string Message { get; set; }
+        public bool Status { get; set; } = false;
+        public string HairType { get; set; }
+        public string HairLength { get; set; }
+        public int TimeId { get; set; } // Referens till TimeModel
+        public Times Time { get; set; }
+        public int HairdresserId { get; set; }
+        public Hairdresser Hairdresser { get; set; }
+        public int CategoryId { get; set; }
+        public Category Category { get; set; }
+        public int CustomerId { get; set; }
+        public Customer Customer { get; set; }
+    }
+
+    public class Times
+    {
+        public int Id { get; set; }
+        public TimeSpan Time { get; set; }
+        public bool Available { get; set; }
+        public DateTime Date { get; set; }
+    }
+
+    public class Hairdresser
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string Speciality { get; set; }
+        public string ImageName { get; set; }
+        public object ImageFile { get; set; }
+    }
+
+    public class Category
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public decimal Price { get; set; }
+    }
+
+    public class Customer
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
+    }
+}

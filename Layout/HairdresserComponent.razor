@@ -1,0 +1,51 @@
+
+<section class="hairdressers">
+    <div class="container">
+<h2 class="text-center">Våra frisörer</h2>
+<div class="line"></div>
+        <div class="row mt-4">
+              @foreach (var hairdressers in hairdresser)
+            {
+            <div class="col-md-4 p-4">
+                <div class="text-center ">
+                    <img src="@hairdressers.ImageName" alt="" class="img-fluid mb-2 hairdresserImg">
+                    <p> <strong>@hairdressers.Name</strong> <br> @hairdressers.Speciality </p>
+                  
+                </div>
+                   </div>
+                }
+         
+          
+         
+        </div>
+   </div>
+</section>
+
+ 
+  @code{
+    private Hairdresser[]? hairdresser;
+
+        protected override async Task OnInitializedAsync()
+    {
+        await LoadHairdressers();
+   
+    }
+
+    private async Task LoadHairdressers()
+    {
+        hairdresser = await Http.GetFromJsonAsync<Hairdresser[]>("http://localhost:5004/api/Hairdresser");
+    }
+//klass för frisörer:
+ public class Hairdresser
+    {
+        public int Id { get; set; }
+        public string? Name { get; set; }
+        public string? Description { get; set; }
+        public string? Speciality { get; set; }
+        public string? ImageName { get; set; } //namn för bild
+
+
+
+    }
+
+  }

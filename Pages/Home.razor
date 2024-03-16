@@ -1,0 +1,60 @@
+﻿@page "/"
+
+<PageTitle>Home</PageTitle>
+<header>
+    <div class="textImage">
+        <h1 class="hero-text p-2">Salong Lilla Hörnan</h1>
+        <NavLink href="/bokatid" class="btn hero btn-standard" id="btn-hero">Boka tid</NavLink>
+    </div>
+    <img src="img/header2.webp" alt="" id="hero-img">
+</header>
+
+<!--Sidans innhåll-->
+<div class="container p-4 mt-4">
+    <section class="mb-4">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="d-flex align-items-center h-100">
+                    <article>
+                        <cite class="citat">En salong för alla</cite>
+                        <h2>Om oss</h2>
+                        <p class="p-text">Som kund hos oss är du mån om ditt hår och vill bli omhändertagen av väl
+                            utbildad personal i en trivsam, lättsam och samtidigt personlig miljö med ett gäng härliga
+                            kreatörer som alltid<br><br> ser lösningarna i allt och ständigt påväg framåt. Vi värderar
+                            service och kvalité högt. Vi har lång tid på behandlingarna och fasta priser allt för att du
+                            ska känna dig trygg med ditt besök hos oss. </p>
+                        <a href="https://maps.app.goo.gl/1dsyA8NTp3H7y7Si9" target="_blank" class="btn btn-standard">Hitta hit</a>
+                    </article>
+                </div>
+            </div>
+            <div class="col-md-6 text-center">
+                <img src="img/frisor.jpg" alt="" class="img-fluid p-4  mb-4">
+            </div>
+        </div>
+    </section>
+    <!--Frisör komponent-->
+    <HairdresserComponent></HairdresserComponent>
+</div>
+<div class=" cite">
+    <div class="container p-4">
+    <div class="row">
+        <div class="col-md-6">
+            <!--Citat del-->
+            <blockquote class="blockquote p-4">
+          <cite class="citat mb-2">Salong Lilla Hörnan</cite>
+                <h2 class="h1 mt-2 w-75">SJÄLVFÖRTREONDE BÖRJAR MED EN BRA FIRSYR </h2>
+            </blockquote>
+        </div>
+        <div class="col-md-6 p-4 mt-2 ">
+            <p>Salong Lilla Hörnan är inte bara en salong - det är en oas av skönhet och självförtroende. Med en passion för
+                att skapa enastående frisyrer och för att lyfta fram varje kunds unika skönhet, strävar vi efter att
+                erbjuda en upplevelse utöver det vanliga.  <br> <br>
+
+                Med vårt kunniga team av erfarna frisörer och vårt engagemang
+                för att använda de bästa produkterna och teknikerna på marknaden</p>
+        </div>
+    </div>
+    </div>
+</div>
+<!--Bild komponent-->
+<ImageComponent></ImageComponent>

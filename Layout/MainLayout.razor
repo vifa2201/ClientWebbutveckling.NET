@@ -1,0 +1,76 @@
+﻿@inherits LayoutComponentBase
+
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+      
+
+        <div class="content">
+            @Body
+        </div>
+    </main>
+    <Footer />
+</div>
+
+@code {
+    private bool isAuthenticated;
+
+    [Parameter] public string CurrentPage { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CheckAuthentication();
+    }
+
+private async Task CheckAuthentication()
+{
+    string token = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "authToken");
+    isAuthenticated = !string.IsNullOrEmpty(token);
+
+    // Kontrollera om användaren är inloggad
+    if (!isAuthenticated && CurrentPage != "/login")
+    {
+        NavigationManager.NavigateTo("/");
+        return;
+    }
+
+    // Om användaren är inloggad, kontrollera om de har tillgång till den aktuella sidan
+    if (CurrentPage.StartsWith("/customer/"))
+    {
+        // Hämta användarinformationen från lagringen
+        var loggedInCustomerJson = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "loggedInCustomer");
+        var loggedInCustomer = JsonSerializer.Deserialize<Customer>(loggedInCustomerJson);
+
+     
+
+        // Extrahera kundens ID från URL:en
+        var customerId = int.Parse(CurrentPage.Split('/')[2]);
+
+        // Kontrollera om användaren har tillgång till sin egen sida
+        if (loggedInCustomer.Id != customerId)
+        {
+            NavigationManager.NavigateTo("/login"); // Eller någon annan lämplig sida för åtkomst nekad
+        }
+    }
+}
+
+    private void Logout()
+    {
+        NavigationManager.NavigateTo("/logout");
+    }
+    
+       public class Customer
+    {
+        public int Id { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
+    
+
+    }
+    }

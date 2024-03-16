@@ -1,0 +1,199 @@
+html, body {
+    font-family: 'Inter','Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #f3f3f3;
+    
+}
+h1{
+font-size: 2.5em;
+font-weight: bold;
+}
+
+.hero-text{
+    z-index: 3;
+    font-size: 3.5em;
+}
+p{
+
+}
+.p-text{
+    line-height: 25px;
+}
+#logo {
+    margin-left: 5%;
+    z-index: 3;
+  color:#ffffff;
+  font-size: 2em;
+  text-decoration: none;
+  font-weight:bold ;
+  }
+nav a{
+    color:#ffffff;
+    text-decoration: none;
+    font-weight:bold ;
+}
+nav a:hover{
+    text-decoration: underline;
+color: white;
+}
+
+.active{
+    text-decoration: underline;
+}
+header{
+    position: relative;
+    text-align: center;
+    color: white;
+}
+
+.textImage{
+    position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+}
+.line{
+    width: 200px;
+  height: 5px;
+  margin: 0 auto;
+  margin-bottom: 2%;
+  background-color:#E0D6C8;
+}
+.citat{
+    font-weight: bold;
+    font-size: 1.2em;
+    color:#3c3933;
+    font-style: italic;
+}
+.centerText{
+margin: 0 auto;
+    width:50%;
+}
+h1{
+    text-align: center;
+    
+}
+h1:focus {
+    outline: none;
+}
+.btn-standard{
+    background-color: #E0D6C8;
+    color: black;
+    font-weight: bold;
+
+}
+ul.breadcrumb {
+
+    list-style: none;
+
+  }
+  
+  /* Display list items side by side */
+  ul.breadcrumb li {
+    display: inline;
+    font-size: 18px;
+  }
+  
+  /* Add a slash symbol (/) before/behind each list item */
+  ul.breadcrumb li+li:before {
+    padding: 8px;
+    color: black;
+    content: "/\00a0";
+  }
+  
+  /* Add a color to all links inside the list */
+  ul.breadcrumb li a {
+    color: #46607b;
+    text-decoration: none;
+  }
+  
+  /* Add a color on mouse-over */
+  ul.breadcrumb li a:hover {
+
+    text-decoration: underline;
+  }
+.btn-standard:hover{
+    background-color:  #a99e90;
+}
+#btn-hero{
+    font-size: 1.8em;
+    padding: 10px 20px;
+}
+.btn .hero{
+    font-size: 3em;
+}
+
+form{
+    margin: 0 auto;
+    width:70%;
+}
+
+form p {
+    margin-top: 1%;
+
+    font-weight: 400;
+    font-size: 1.2em;
+}
+img{
+    max-width: 100%;
+}
+
+.bg-grey{
+    background-color: #f6f6f6;
+}
+
+h4{
+    font-size: 1.3em;
+}
+
+    footer{
+        background-color: #302F2D;
+        color:rgb(229, 229, 229);
+        
+margin-top: 5%;
+        font-size: 1.2em;
+        padding: 1.2%;
+
+    }
+    footer li {
+        list-style:none;
+    }
+#blazor-error-ui{
+    display: none;
+}
+
+.hairdressers .row .col-md-4 {
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+label{
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.form-control, .form-select {
+    border:none;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    padding: 10px;
+    margin-bottom: 2%;
+    border: 10px;
+}
+
+.hairdresserImg{
+    max-width: 80%;
+}
+.cite{
+    padding: 2%;
+    background-color:#e8e2db;
+}
+
+@media(max-width: 700px)
+{
+    .hero-text{
+        font-size: 2em;
+    }
+    #btn-hero{
+        font-size: 1.2em;
+        padding: 5px 10px;
+    }
+}
